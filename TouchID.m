@@ -24,6 +24,23 @@ RCT_EXPORT_METHOD(isSupported: (RCTResponseSenderBlock)callback)
     }
 }
 
+
+RCT_EXPORT_METHOD(isDetectBiometric: (NSString *)reason
+                  options:(NSDictionary *)options
+                  callback: (RCTResponseSenderBlock)callback)
+{
+//    NSNumber *passcodeFallback = [NSNumber numberWithBool:false];
+    LAContext *context = [[LAContext alloc] init];
+    NSError *error;
+    
+    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+         callback(@[[NSNull null], [self getBiometryType:context]]);
+    }else{
+        callback(@[RCTMakeError(@"RCTTouchIDNotSupported", nil, nil)]);
+        return;
+    }
+}
+
 RCT_EXPORT_METHOD(authenticate: (NSString *)reason
                   options:(NSDictionary *)options
                   callback: (RCTResponseSenderBlock)callback)

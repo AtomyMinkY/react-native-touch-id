@@ -25,6 +25,27 @@ export default {
       });
     });
   },
+  
+  isDetectBiometric(reason, config) {
+    const DEFAULT_CONFIG = {
+      fallbackLabel: null,
+      unifiedErrors: false,
+      passcodeFallback: false
+    };
+    const authReason = reason ? reason : ' ';
+    const authConfig = Object.assign({}, DEFAULT_CONFIG, config);
+
+    return new Promise((resolve, reject) => {
+      NativeTouchID.isDetectBiometric(authReason, authConfig, error => {
+        // Return error if rejected
+        if (error) {
+          return reject(createError(authConfig, error.message));
+        }
+
+        resolve(false);
+      });
+    });
+  },
 
   authenticate(reason, config) {
     const DEFAULT_CONFIG = {
